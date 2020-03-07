@@ -8,5 +8,7 @@ namespace Habitica.Repositories
     public interface IUserRepository
     {
         UserData GetUser(string userId);
+
+        UserData UpdateUser(UserData userData);
     }
 }

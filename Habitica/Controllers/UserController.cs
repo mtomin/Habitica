@@ -23,13 +23,22 @@ namespace Habitica.Controllers
 
         //Get user details.
         [HttpGet]
-        public UserData GetUserDetails(string userId)
+        [Produces("application/json")]
+        public ObjectResult GetUserDetails(string userId)
         {
-            var user = _userRepository.GetUser((new Guid()).ToString());
-            return user;
+            var user = _userRepository.GetUser(userId);
+            if (user != null)
+                return Ok(user);
+            else
+                return BadRequest("User does not exist");
         }
 
-        //[]
+        [HttpPut]
+        public ObjectResult UpdateUserData(UserData userData)
+        {
+            var updatedData = _userRepository.UpdateUser(userData);
+            return Ok(updatedData);
+        }
 
         [HttpGet]
         public string GetStuff()

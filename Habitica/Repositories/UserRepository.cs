@@ -11,5 +11,10 @@ namespace Habitica.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public UserData UpdateUser(UserData userData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
