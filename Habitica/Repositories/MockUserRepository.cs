@@ -7,8 +7,8 @@ namespace Habitica.Repositories
 {
     public class MockUserRepository : IUserRepository
     {
-        private List<UserData> users = new List<UserData>()
-        { new UserData()
+        private List<User> users = new List<User>()
+        { new User()
         {
             UserId = (new Guid()).ToString(),
                 Activities = new List<Activity>()
@@ -25,7 +25,7 @@ namespace Habitica.Repositories
             }
         };
 
-        public UserData GetUser(string userId)
+        public User GetUser(string userId)
         {
             try
             {
@@ -35,15 +35,44 @@ namespace Habitica.Repositories
             { return null; }
         }
 
-        public UserData UpdateUser(UserData userData)
+        public User UpdateUser(User userData)
         {
             try
             {
-                users.First(u=>u.UserId.Equals(userData.UserId, StringComparison.OrdinalIgnoreCase)).Activities[0].Name = "User has been modified";
-                return users.FirstOrDefault(u => u.UserId.Equals(userData.UserId, StringComparison.OrdinalIgnoreCase));
+                users.First(u => u.UserId.Equals(userData.UserId, StringComparison.OrdinalIgnoreCase)).Activities[0].Name = "User has been modified";
+                return users.Find(u => u.UserId.Equals(userData.UserId, StringComparison.OrdinalIgnoreCase));
             }
             catch
             { return null; }
+        }
+
+        public User CreateUser(User userData)
+        {
+            try
+            {
+                users.Add(userData);
+                return userData;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public bool DeleteUser(string userId)
+        {
+            var userToRemove = users.Find(u => u.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
+            if (userToRemove == null)
+                return false;
+            try
+            {
+                users.Remove(userToRemove);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

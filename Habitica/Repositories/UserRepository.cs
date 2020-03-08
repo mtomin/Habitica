@@ -7,12 +7,22 @@ namespace Habitica.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public UserData GetUser(string userId)
+        public User GetUser(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public UserData UpdateUser(UserData userData)
+        public User UpdateUser(User userData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User CreateUser(User userData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteUser(string userId)
         {
             throw new NotImplementedException();
         }
