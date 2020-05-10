@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Habitica.Repositories;
 using Habitica_API.DataAccess;
+using Habitica_API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,19 +18,19 @@ namespace Habitica.Controllers
 
         private readonly IUserRepository _userRepository;
 
-        private readonly DatabaseContext _context;
+        private readonly IActivityRepository _activityRepository;
 
-        public UserController(ILogger<UserController> logger, IUserRepository userRepository, DatabaseContext context)
+        public UserController(ILogger<UserController> logger, IUserRepository userRepository, IActivityRepository activityRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
-            _context = context;
+            _activityRepository = activityRepository;
         }
 
         //Get user details.
         [HttpGet]
         [Produces("application/json")]
-        public ObjectResult GetUserDetails(string userId)
+        public ObjectResult GetUserDetails(int userId)
         {
             var user = _userRepository.GetUser(userId);
             if (user != null)
@@ -56,7 +57,7 @@ namespace Habitica.Controllers
         }
 
         [HttpDelete]
-        public StatusCodeResult DeleteUser(string userId)
+        public StatusCodeResult DeleteUser(int userId)
         {
             var userDeleted = _userRepository.DeleteUser(userId);
             if (userDeleted)

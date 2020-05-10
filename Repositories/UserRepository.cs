@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Habitica_API.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +9,14 @@ namespace Habitica.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public User GetUser(string userId)
+        private DatabaseContext _context;
+        public UserRepository(DatabaseContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public User GetUser(int userId)
+        {
+            return _context.Users.Find(userId);
         }
 
         public User UpdateUser(User userData)
@@ -22,7 +29,7 @@ namespace Habitica.Repositories
             throw new NotImplementedException();
         }
 
-        public bool DeleteUser(string userId)
+        public bool DeleteUser(int userId)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
 ﻿using Habitica;
+using Habitica_API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,18 @@ namespace Habitica_API.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Index for unique constraint on username.
+            modelBuilder.Entity<RegisteredUser>(ru=>ru.HasIndex(e=>e.Username).IsUnique());
         }
 
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
-        public DbSet<Activity> Activities { get; set; }
+        public virtual DbSet<Activity> Activities { get; set; }
+
+        public virtual DbSet<ActivityEntry> ActivityEntries { get; set; }
+
+        public virtual DbSet<ActivityConfiguration> ActivityConfiguration { get; set; }
+
+        public virtual DbSet<RegisteredUser> RegisteredUsers { get; set; }
     }
 }

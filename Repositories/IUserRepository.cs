@@ -7,12 +7,12 @@ namespace Habitica.Repositories
 {
     public interface IUserRepository
     {
-        User GetUser(string userId);
+        User GetUser(int userId);
 
         User UpdateUser(User userData);
 
         User CreateUser(User userData);
 
-        bool DeleteUser(string userId);
+        bool DeleteUser(int userId);
     }
 }
