@@ -18,7 +18,7 @@ namespace Habitica_API.Controllers
         public ActivityController(IActivityRepository activityRepository)
         {
             _activityRepository = activityRepository;
-            //a
+            
         }
 
         [Authorize]

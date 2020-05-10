@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Habitica-API",
+    "\\Habitica-API\\Controllers"
   ],
   "SelectedNode": "\\Habitica.sln",
   "PreviewInSolutionExplorer": false
