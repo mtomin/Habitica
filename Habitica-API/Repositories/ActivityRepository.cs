@@ -1,5 +1,4 @@
-﻿using Habitica;
-using Habitica_API.DataAccess;
+﻿using Habitica_API.DataAccess;
 using Habitica_API.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,10 +27,10 @@ namespace Habitica_API.Repositories
             _context.SaveChanges();
         }
 
-        public List<ActivityConfiguration> GetUserActivities(int userId)
+        public List<ActivityConfiguration> GetUserActivities(int userID)
         {
-            var user = _context.Users.Find(userId);
-            var activitiesDoneToday = _context.ActivityEntries.Where(ua => ua.Timestamp >= DateTime.Today).Select(a => a.Activity);
+            var user = _context.Users.Find(userID);
+            var activitiesDoneToday = _context.Users.Find(userID).ActivityEntries.Where(ua => ua.Timestamp >= DateTime.Today).Select(a => a.Activity);
             user.ActivityData.ForEach(ad => ad.DoneToday = activitiesDoneToday.Contains(ad.Activity));
             return user.ActivityData;
         }
@@ -39,10 +38,11 @@ namespace Habitica_API.Repositories
         public ActivityConfiguration UpdateActivity(ActivityConfiguration newActivityConfiguration, int userID)
         {
             var activityConfigurationToChange = _context.ActivityConfiguration.First(ac => ac == newActivityConfiguration);
-            activityConfigurationToChange.DoneToday = _context.ActivityEntries.Any(ae => ae.Activity.Equals(activityConfigurationToChange.Activity) && ae.Timestamp >= DateTime.Today);
+            activityConfigurationToChange.DoneToday = _context.Users.Find(userID).ActivityEntries.Any(ae => ae.Activity.Equals(activityConfigurationToChange.Activity) && ae.Timestamp >= DateTime.Today);
 
             if (activityConfigurationToChange.DoneToday != newActivityConfiguration.DoneToday)
             {
+                var user = _context.Users.Find(userID);
                 if (!activityConfigurationToChange.DoneToday && newActivityConfiguration.DoneToday)
                 {
                     var newEntry = new ActivityEntry()
@@ -50,12 +50,17 @@ namespace Habitica_API.Repositories
                         Activity = _context.Activities.Find(newActivityConfiguration.Activity.ActivityID),
                         Timestamp = DateTime.UtcNow
                     };
-                    _context.Users.Find(userID).ActivityEntries.Add(newEntry);
+
+                    user.ActivityEntries.Add(newEntry);
+                    user.Experience += (int)newActivityConfiguration.Difficulty;
 
                 }
                 else if (activityConfigurationToChange.DoneToday && !newActivityConfiguration.DoneToday)
                 {
-                    var activityToDelete = _context.ActivityEntries.First(ae => ae.Activity.Equals(newActivityConfiguration.Activity) && ae.Timestamp > DateTime.Today);
+                    var activityToDelete = user.ActivityEntries.First(ae => ae.Activity.ActivityID.Equals(newActivityConfiguration.Activity.ActivityID) && ae.Timestamp > DateTime.Today);
+                    user.ActivityEntries.Remove(activityToDelete);
+                    user.Experience -= (int)newActivityConfiguration.Difficulty;
+                    user.Experience = user.Experience < 0 ? 0 : user.Experience;
                     _context.ActivityEntries.Remove(activityToDelete);
                 }
             }
@@ -63,6 +68,11 @@ namespace Habitica_API.Repositories
             _context.SaveChanges();
 
             return newActivityConfiguration;
+        }
+
+        public List<ActivityEntry> GetActivityHistory(int activityID, int userID)
+        {
+            return _context.Users.Find(userID).ActivityEntries.Where(ae => ae.Activity.ActivityID.Equals(activityID)).ToList();
         }
     }
 }

@@ -13,5 +13,7 @@ namespace Habitica_API.Repositories
         public void DeleteActivity(int activityId);
 
         public List<ActivityConfiguration> GetUserActivities(int userId);
+
+        public List<ActivityEntry> GetActivityHistory(int activityID, int userID);
     }
 }

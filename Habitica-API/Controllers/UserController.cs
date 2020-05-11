@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Habitica.Repositories;
-using Habitica_API.DataAccess;
+﻿using Habitica.Repositories;
 using Habitica_API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Habitica.Controllers
 {

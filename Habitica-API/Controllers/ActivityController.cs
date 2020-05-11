@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Habitica_API.Models;
+﻿using Habitica_API.Models;
 using Habitica_API.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Habitica_API.Controllers
 {
     [Route("[controller]/[action]/{id?}")]
+    [Authorize]
     [ApiController]
     public class ActivityController : ControllerBase
     {
@@ -18,10 +16,8 @@ namespace Habitica_API.Controllers
         public ActivityController(IActivityRepository activityRepository)
         {
             _activityRepository = activityRepository;
-            
         }
 
-        [Authorize]
         [HttpGet]
         public ObjectResult GetUserActivities()
         {
@@ -34,7 +30,6 @@ namespace Habitica_API.Controllers
             return Ok(userActivities);
         }
 
-        [Authorize]
         [HttpPut]
         public ObjectResult UpdateUserActivity(ActivityConfiguration activityConfiguration)
         {
@@ -47,6 +42,21 @@ namespace Habitica_API.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Error updating activity!");
+            }
+        }
+
+        [HttpGet]
+        public ObjectResult GetActivityHistory(int id)
+        {
+            var userID = int.Parse(User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            try
+            {
+                var result = _activityRepository.GetActivityHistory(id, userID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error fetching activity history!");
             }
         }
     }

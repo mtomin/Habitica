@@ -2,13 +2,8 @@
 using Habitica_API.Models;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Habitica_API.Helpers;
-
 
 namespace Habitica_API.Repositories
 {
@@ -27,7 +22,7 @@ namespace Habitica_API.Repositories
                 Username = loginData.Username,
                 User = new Habitica.User()
                 {
-                    ActivityData = ActivitiesHelper.DefaultActivities(_context)
+                    ActivityData = GetDefaultActivities()
                 }
             };
 
@@ -79,6 +74,23 @@ namespace Habitica_API.Repositories
             }
 
             return registeredUser;
+        }
+
+        private List<ActivityConfiguration> GetDefaultActivities()
+        {
+            var activityConfigurations = new List<ActivityConfiguration>();
+            foreach (var activity in _context.Activities.Where(a => a.IsDefault))
+            {
+                activityConfigurations.Add(new ActivityConfiguration()
+                {
+                    Activity = activity,
+                    Difficulty = Habitica.Difficulty.Medium,
+                    DoneToday = false,
+                    Goal = Goal.Weekly
+                });
+            }
+
+            return activityConfigurations;
         }
     }
 }

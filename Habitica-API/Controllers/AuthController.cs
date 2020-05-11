@@ -1,10 +1,10 @@
 ﻿using Habitica_API.DataAccess;
+using Habitica_API.Helpers;
 using Habitica_API.Models;
 using Habitica_API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using Habitica_API.Helpers;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Habitica_API.Controllers
 {
